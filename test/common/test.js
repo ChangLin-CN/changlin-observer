@@ -161,6 +161,9 @@ module.exports.test = function (Observer) {
                 result=c
             });
             expect(result==='b').to.be.equal(true);
+            
+            observer.trigger('event','1','2','3');
+            expect(result==='3').to.be.equal(true);
         });
         
     })
