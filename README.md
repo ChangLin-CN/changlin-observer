@@ -57,7 +57,7 @@ class Person {
    Observer.call(this)
   }
 }
-}
+
 let person=new Person();
 let that,a1,a2,a3,count=0;
  person.listen('e',function(a,b,c){
