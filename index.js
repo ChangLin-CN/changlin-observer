@@ -9,10 +9,6 @@ var _changlinUtil = require('changlin-util');
 
 var _changlinWarning = require('changlin-warning');
 
-function check(key, fn) {
-    if (!(0, _changlinUtil.isString)(key) || !isFunction(fn)) throw new Error('Parameter type error');
-}
-
 var Observer = exports.Observer = function Observer(option) {
     var self = void 0,
         setting = { needCache: false };
@@ -78,7 +74,7 @@ var Observer = exports.Observer = function Observer(option) {
     function on(key, fn) {
         check(key, fn);
         key = (0, _changlinUtil.trim)(key);
-        var keys = key.split(/\s{1,}/g);
+        var keys = key.split(/\s+/);
         keys.forEach(function (k) {
             _add(clientList, k, fn);
         });
@@ -99,12 +95,12 @@ var Observer = exports.Observer = function Observer(option) {
         }
 
         if (onlyTriggerOneTime[key]) {
-            run.apply(undefined, [onlyTriggerOneTime[key]].concat(other));
+            run.apply(undefined, [self, onlyTriggerOneTime[key]].concat(other));
             delete onlyTriggerOneTime[key];
         }
 
         if (clientList[key]) {
-            run.apply(undefined, [clientList[key]].concat(other));
+            run.apply(undefined, [self, clientList[key]].concat(other));
         }
 
         if (!onlyTriggerOneTime[key] && !clientList[key] && setting.needCache) {
@@ -128,18 +124,22 @@ var Observer = exports.Observer = function Observer(option) {
             });
         }
     }
-
-    function run(fns) {
-        for (var _len2 = arguments.length, other = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
-            other[_key2 - 1] = arguments[_key2];
-        }
-
-        fns.forEach(function (fn) {
-            try {
-                fn.call.apply(fn, [self].concat(other));
-            } catch (e) {
-                (0, _changlinWarning.warning)(true, e);
-            }
-        });
-    }
 };
+
+function run(self, fns) {
+    for (var _len2 = arguments.length, other = Array(_len2 > 2 ? _len2 - 2 : 0), _key2 = 2; _key2 < _len2; _key2++) {
+        other[_key2 - 2] = arguments[_key2];
+    }
+
+    fns.forEach(function (fn) {
+        try {
+            fn.call.apply(fn, [self].concat(other));
+        } catch (e) {
+            (0, _changlinWarning.warning)(true, e);
+        }
+    });
+}
+
+function check(key, fn) {
+    if (!(0, _changlinUtil.isString)(key) || !(0, _changlinUtil.isFunction)(fn)) throw new Error('Parameter type error');
+}
