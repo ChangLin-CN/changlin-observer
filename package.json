@@ -1,13 +1,14 @@
 {
   "name": "changlin-observer",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "observer events listening ",
   "main": "index.js",
   "scripts": {
     "test": "npm run test:src && npm run test:dist",
     "test:src": "mocha  --require babel-register test/src.test.js",
     "test:dist": "mocha  test/dist.test.js",
-    "build": "babel src/index.js  --out-file ./index.js"
+    "build": "babel src/index.js  --out-file ./index.js",
+    "pb":"npm run build && npm run test && npm publish"
   },
   "repository": {
     "type": "git",
