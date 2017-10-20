@@ -19,75 +19,67 @@ export let Observer = function (option) {
         onlyTriggerOneTime   = {};//只执行一次事件的列表
     
     extend(self, {
-        listen,
-        on,
-        one,
-        remove,
-        trigger
+        listen:  function (key, fn) {
+            _check(key,fn);
+            _add({list:clientList, key, fn,cache,setting,onlyTriggerOneTime});
+        },
+        on:function(key,fn){
+            _on({key,fn,clientList,cache,setting,onlyTriggerOneTime})
+        },
+        one:  function (key, fn) {
+            _check(key,fn);
+            _add({list:onlyTriggerOneTime, key, fn,cache,setting,onlyTriggerOneTime});
+        },
+        remove:function(key,fn){
+            _remove({key, fn,onlyTriggerOneTime,clientList})
+        },
+        trigger:function(key,...other){
+            _trigger({key,other,onlyTriggerOneTime,clientList,setting,cache,self})
+        }
     });
     
     return self;
-    
-    
-   
-    
-    
-    //事件监听
-    function listen(key, fn) {
-      _check(key,fn);
-        _add({list:clientList, key, fn,cache,setting,onlyTriggerOneTime});
-    }
-    
-    //批量添加事件监听
-    function on(key, fn) {
-        _check(key,fn);
-        key      = trim(key);
-        let keys =  key.split(/\s+/);
-       keys.forEach(k=>{
-           _add({list:clientList,key:k,fn,cache,setting,onlyTriggerOneTime})
-       })
-    }
-    
-    //one一次
-    function one(key, fn) {
-        _check(key,fn);
-        _add({list:onlyTriggerOneTime, key, fn,cache,setting,onlyTriggerOneTime});
-    }
-    
-    
-    //触发
-    function trigger(key,...other) {
-        if(warning(!isString(key),`Parameter type error`))return;
-        
-        if(onlyTriggerOneTime[key]){
-            _run(self,onlyTriggerOneTime[key],...other);
-            delete onlyTriggerOneTime[key]
-        }
-        
-        if(clientList[key]){
-            _run(self,clientList[key],...other)
-        }
-    
-        if(!onlyTriggerOneTime[key]&&!clientList[key]&&setting.needCache){
-            cache[key] = other;
-        }
-    }
-    
-    //移除
-    function remove(key, fn) {
-        _check(key,fn);
-    
-        if(onlyTriggerOneTime[key]){
-          removeFromArray(onlyTriggerOneTime[key],item=>item===fn);
-        }
-    
-        if(clientList[key]){
-            removeFromArray(clientList[key],item=>item===fn);
-        }
-        
-    }
-   
 };
+
+
+function _remove({key, fn,onlyTriggerOneTime,clientList}) {
+    _check(key,fn);
+    
+    if(onlyTriggerOneTime[key]){
+        removeFromArray(onlyTriggerOneTime[key],item=>item===fn);
+    }
+    
+    if(clientList[key]){
+        removeFromArray(clientList[key],item=>item===fn);
+    }
+    
+}
+
+function _trigger({key,other,onlyTriggerOneTime,clientList,setting,cache,self}) {
+    if(warning(!isString(key),`Parameter type error`))return;
+    
+    if(onlyTriggerOneTime[key]){
+        _run(self,onlyTriggerOneTime[key],...other);
+        delete onlyTriggerOneTime[key]
+    }
+    
+    if(clientList[key]){
+        _run(self,clientList[key],...other)
+    }
+    
+    if(!onlyTriggerOneTime[key]&&!clientList[key]&&setting.needCache){
+        cache[key] = other;
+    }
+}
+
+function _on({key, fn,clientList,cache,setting,onlyTriggerOneTime}) {
+    _check(key,fn);
+    key      = trim(key);
+    let keys =  key.split(/\s+/);
+    keys.forEach(k=>{
+        _add({list:clientList,key:k,fn,cache,setting,onlyTriggerOneTime})
+    })
+}
 
 //添加监听
 function _add({list, key, fn,cache,setting,onlyTriggerOneTime}) {
