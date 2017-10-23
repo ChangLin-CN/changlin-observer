@@ -1,5 +1,5 @@
 # changlin-observer
-事件监听   /  event listening
+观察者模式 / 事件监听 订阅，触发 发布/  event listening
 
 
 [![language](https://img.shields.io/badge/language-javascript-orange.svg)](https://github.com/ChangLin-CN/changlin-observer.git)        [![npm version](https://img.shields.io/npm/v/changlin-observer.svg)](https://www.npmjs.com/package/changlin-observer)  [![Build Status](https://travis-ci.org/ChangLin-CN/changlin-observer.svg?branch=master)](https://travis-ci.org/ChangLin-CN/changlin-observer)
@@ -27,7 +27,24 @@ result//=>'b'
 ```
 
 ```javascript
-//例2
+//例2  （若存在方法命名冲突，可修改方法名）
+import {Observer} from "changlin-observer"
+ let observer2 = new Observer({
+            methodsReplace: {
+                listen: 'subscribe',
+                remove: 'unsubscribe',
+                trigger: 'publish'
+            }
+        });
+ let result=0,cb=function(a){result=a};
+  observer2.subscribe('e',cb);
+  observer2.publish('e',3);
+  result//=>3
+
+```
+
+```javascript
+//例3
 let Observer=require('changlin-observer').Observer;
 function Person(){
    Observer.call(this);
@@ -50,7 +67,7 @@ let that,a1,a2,a3,count=0;
 ```
 
 ```javascript
-//例3
+//例4
 import {Observer} from "changlin-observer"
 class Person {
   constructor(x, y) {

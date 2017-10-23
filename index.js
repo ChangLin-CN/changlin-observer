@@ -9,15 +9,33 @@ var _toConsumableArray2 = require('babel-runtime/helpers/toConsumableArray');
 
 var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
 
+var _defineProperty2 = require('babel-runtime/helpers/defineProperty');
+
+var _defineProperty3 = _interopRequireDefault(_defineProperty2);
+
 var _changlinUtil = require('changlin-util');
 
 var _changlinWarning = require('changlin-warning');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+//默认方法名
+var methodsName = {
+    listen: 'listen',
+    on: 'on',
+    one: 'one',
+    remove: 'remove',
+    trigger: 'trigger'
+};
+
 var Observer = exports.Observer = function Observer(option) {
+    var _extend;
+
     var self = void 0,
-        setting = { needCache: false };
+        setting = {
+        needCache: false,
+        methodsReplace: undefined
+    };
 
     if (!(0, _changlinUtil.isObject)(this) || (0, _changlinUtil.isWindow)(this)) {
         throw new Error('this is not a Object');
@@ -29,35 +47,38 @@ var Observer = exports.Observer = function Observer(option) {
         (0, _changlinUtil.extend)(setting, option);
     }
 
-    var clientList = {},
+    var mName = {},
+        //方法名
+    clientList = {},
         //监听事件列表
     cache = {},
         //缓存已触发的事件
     onlyTriggerOneTime = {}; //只执行一次事件的列表
 
-    (0, _changlinUtil.extend)(self, {
-        listen: function listen(key, fn) {
-            _check(key, fn);
-            _add({ list: clientList, key: key, fn: fn, cache: cache, setting: setting, onlyTriggerOneTime: onlyTriggerOneTime });
-        },
-        on: function on(key, fn) {
-            _on({ key: key, fn: fn, clientList: clientList, cache: cache, setting: setting, onlyTriggerOneTime: onlyTriggerOneTime });
-        },
-        one: function one(key, fn) {
-            _check(key, fn);
-            _add({ list: onlyTriggerOneTime, key: key, fn: fn, cache: cache, setting: setting, onlyTriggerOneTime: onlyTriggerOneTime });
-        },
-        remove: function remove(key, fn) {
-            _remove({ key: key, fn: fn, onlyTriggerOneTime: onlyTriggerOneTime, clientList: clientList });
-        },
-        trigger: function trigger(key) {
-            for (var _len = arguments.length, other = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-                other[_key - 1] = arguments[_key];
-            }
 
-            _trigger({ key: key, other: other, onlyTriggerOneTime: onlyTriggerOneTime, clientList: clientList, setting: setting, cache: cache, self: self });
+    if ((0, _changlinUtil.isObject)(setting.methodsReplace)) {
+        mName = (0, _changlinUtil.extend)((0, _changlinUtil.extend)({}, methodsName), setting.methodsReplace);
+    } else {
+        mName = methodsName;
+    }
+
+    (0, _changlinUtil.extend)(self, (_extend = {}, (0, _defineProperty3.default)(_extend, mName.listen, function (key, fn) {
+        _check(key, fn);
+        _add({ list: clientList, key: key, fn: fn, cache: cache, setting: setting, onlyTriggerOneTime: onlyTriggerOneTime });
+    }), (0, _defineProperty3.default)(_extend, mName.on, function (key, fn) {
+        _on({ key: key, fn: fn, clientList: clientList, cache: cache, setting: setting, onlyTriggerOneTime: onlyTriggerOneTime });
+    }), (0, _defineProperty3.default)(_extend, mName.one, function (key, fn) {
+        _check(key, fn);
+        _add({ list: onlyTriggerOneTime, key: key, fn: fn, cache: cache, setting: setting, onlyTriggerOneTime: onlyTriggerOneTime });
+    }), (0, _defineProperty3.default)(_extend, mName.remove, function (key, fn) {
+        _remove({ key: key, fn: fn, onlyTriggerOneTime: onlyTriggerOneTime, clientList: clientList });
+    }), (0, _defineProperty3.default)(_extend, mName.trigger, function (key) {
+        for (var _len = arguments.length, other = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+            other[_key - 1] = arguments[_key];
         }
-    });
+
+        _trigger({ key: key, other: other, onlyTriggerOneTime: onlyTriggerOneTime, clientList: clientList, setting: setting, cache: cache, self: self });
+    }), _extend));
 
     return self;
 };

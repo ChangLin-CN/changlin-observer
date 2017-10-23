@@ -1,8 +1,20 @@
 import {isObject, extend, isString, trim,removeFromArray,isWindow,isFunction} from 'changlin-util'
 import {warning} from 'changlin-warning'
 
+//默认方法名
+const methodsName={
+    listen:'listen',
+    on:'on',
+    one:'one',
+    remove:'remove',
+    trigger:'trigger'
+};
+
 export let Observer = function (option) {
-    let self, setting = {needCache: false};
+    let self, setting = {
+        needCache: false,
+        methodsReplace:undefined
+    };
     
     if (!isObject(this)||isWindow(this)) {
         throw new Error('this is not a Object')
@@ -14,26 +26,35 @@ export let Observer = function (option) {
         extend(setting, option)
     }
     
-    let clientList = {},//监听事件列表
+    let mName={},//方法名
+        clientList = {},//监听事件列表
         cache      = {},//缓存已触发的事件
         onlyTriggerOneTime   = {};//只执行一次事件的列表
     
+    
+    
+    if(isObject(setting.methodsReplace)){
+        mName=extend(extend({},methodsName),setting.methodsReplace)
+    }else{
+        mName=methodsName;
+    }
+    
     extend(self, {
-        listen:  function (key, fn) {
+        [mName.listen]:  function (key, fn) {
             _check(key,fn);
             _add({list:clientList, key, fn,cache,setting,onlyTriggerOneTime});
         },
-        on:function(key,fn){
+        [mName.on]:function(key,fn){
             _on({key,fn,clientList,cache,setting,onlyTriggerOneTime})
         },
-        one:  function (key, fn) {
+        [mName.one]:  function (key, fn) {
             _check(key,fn);
             _add({list:onlyTriggerOneTime, key, fn,cache,setting,onlyTriggerOneTime});
         },
-        remove:function(key,fn){
+        [mName.remove]:function(key,fn){
             _remove({key, fn,onlyTriggerOneTime,clientList})
         },
-        trigger:function(key,...other){
+        [mName.trigger]:function(key,...other){
             _trigger({key,other,onlyTriggerOneTime,clientList,setting,cache,self})
         }
     });
