@@ -1,14 +1,15 @@
 {
   "name": "changlin-observer",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "observer events listening ",
   "main": "index.js",
+  "typing": "index.d.ts",
   "scripts": {
     "test": "npm run test:src && npm run test:dist",
     "test:src": "mocha  --require babel-register test/src.test.js",
     "test:dist": "mocha  test/dist.test.js",
     "build": "babel src/index.js  --out-file ./index.js",
-    "pb":"npm run build && npm run test && npm publish"
+    "pb": "npm run build && npm run test && npm publish"
   },
   "repository": {
     "type": "git",
@@ -27,7 +28,7 @@
   "homepage": "https://github.com/ChangLin-CN/changlin-observer#readme",
   "dependencies": {
     "babel-runtime": "^6.26.0",
-    "changlin-util": "^2.2.5",
+    "changlin-util": "^2.3.0",
     "changlin-warning": "^1.1.1"
   },
   "devDependencies": {

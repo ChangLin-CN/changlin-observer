@@ -1,4 +1,4 @@
-import {isObject, extend, isString, trim,removeFromArray,isWindow,isFunction} from 'changlin-util'
+import {isObject, extend, isString, trim,removeFromArray,isWindow,isFunction,find} from 'changlin-util'
 import {warning} from 'changlin-warning'
 
 //默认方法名
@@ -109,7 +109,7 @@ function _add({list, key, fn,cache,setting,onlyTriggerOneTime}) {
     }
     
     //检查函数是否已被注册过，避免重复注册
-    if (list[key].find(item => item === fn)) {
+    if (find(list[key],item => item === fn)) {
         warning(true, `${fn.name} has already been registered`);
         return
     }

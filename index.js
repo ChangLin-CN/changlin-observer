@@ -159,7 +159,7 @@ function _add(_ref4) {
     }
 
     //检查函数是否已被注册过，避免重复注册
-    if (list[key].find(function (item) {
+    if ((0, _changlinUtil.find)(list[key], function (item) {
         return item === fn;
     })) {
         (0, _changlinWarning.warning)(true, fn.name + ' has already been registered');
