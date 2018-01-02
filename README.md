@@ -2,7 +2,7 @@
 观察者模式 / 事件监听 订阅，触发 发布/  event listening
 
 
-[![language](https://img.shields.io/badge/language-javascript-orange.svg)](https://github.com/ChangLin-CN/changlin-observer.git)        [![npm version](https://img.shields.io/npm/v/changlin-observer.svg)](https://www.npmjs.com/package/changlin-observer)  [![Build Status](https://travis-ci.org/ChangLin-CN/changlin-observer.svg?branch=master)](https://travis-ci.org/ChangLin-CN/changlin-observer)
+[![language](https://img.shields.io/badge/language-javascript-orange.svg)](https://github.com/ChangLin-CN/changlin-observer.git)        [![npm version](https://img.shields.io/npm/v/changlin-observer.svg)](https://www.npmjs.com/package/changlin-observer)  [![Build Status](https://travis-ci.org/changlin-cn/changlin-observer.svg?branch=master)](https://travis-ci.org/changlin-cn/changlin-observer)
 
 ### 安装
 ```javascript

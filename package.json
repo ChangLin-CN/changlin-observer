@@ -1,6 +1,6 @@
 {
   "name": "changlin-observer",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "observer events listening ",
   "main": "index.js",
   "typing": "index.d.ts",
